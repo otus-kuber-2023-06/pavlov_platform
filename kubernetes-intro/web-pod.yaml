@@ -1,0 +1,30 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: web
+  labels:
+    app: web
+spec:
+  initContainers:
+    - name: init-nginx
+      image: busybox:latest
+#      command: [ 'sh', '-c', 'wget -O- https://tinyurl.com/otus-k8s-intro | sh' ]
+      command: [ 'sh', '-c' ]
+      args:
+        - echo "$(date +%Y-%m-%d\ %H:%M:%S\ %Z) start copy from and execute https://tinyurl.com/otus-k8s-intro" && 
+          wget -O- https://tinyurl.com/otus-k8s-intro | sh &&
+          echo "$(date +%Y-%m-%d\ %H:%M:%S\ %Z) otus-k8s-intro finish"
+      volumeMounts:
+        - mountPath: /app
+          name: app
+  containers:
+    - name: nginx
+      image: minized/kuber-hw-nginx:0.1
+      volumeMounts:
+        - mountPath: /app
+          name: app
+#  restartPolicy: OnFailure
+  restartPolicy: Never
+  volumes:
+    - name: app
+      emptyDir: { }

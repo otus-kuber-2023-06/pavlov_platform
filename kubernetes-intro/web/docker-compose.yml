@@ -1,0 +1,12 @@
+version: '3.9'
+
+services:
+  web-server-check:
+    build:
+      context: ./
+    ports:
+      - host_ip: 127.0.0.1
+        target: 8000
+        published: 80
+        protocol: tcp
+        mode: host
